@@ -10,6 +10,8 @@ To run use   ./shotput_processor <source_img.format> <width> <height> <destinati
 
 #Dependencies
 
-zlib 
+zlib
+ 
 libpng
+
 jpeg-8b 
