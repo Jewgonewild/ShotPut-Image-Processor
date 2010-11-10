@@ -28,6 +28,7 @@ char pikchur_spec(double width,double height, char *type)
 				new_width = 170;
 				new_height = height / scale;
 			}
+			
 		}
 		else if(strcmp("m",type)==0)
 		{
