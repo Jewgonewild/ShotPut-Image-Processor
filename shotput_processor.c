@@ -13,15 +13,13 @@ void scale(double width,double height, double input_width, double input_height)
 	double new_width = 0;
 	double new_height = 0;
 	
-	if(input_width!=0)
-	{
+	if(input_width!=0){
 		scale = width/input_width;
 		new_width = input_width;
 		new_height = height / scale;
 	}
 	
-	if(input_width==0 && input_height!=0)
-	{
+	if(input_width==0 && input_height!=0){
 		scale = height/input_height;
 		new_height = input_height;
 		new_width = width / scale;
@@ -62,20 +60,16 @@ int main(int argc,char **argv)
 	/*Start argument collection.. iterate on this..*/
 	source_image = argv[2];
 	
-	if(strcmp(argv[3],"-w")==0)
-	{
+	if(strcmp(argv[3],"-w")==0){
 		input_width = atoi(argv[4]);
 	}
-	else if(strcmp(argv[3],"-h")==0)
-	{
+	else if(strcmp(argv[3],"-h")==0){
 		input_height = atoi(argv[4]);
 	}
-	if(strcmp(argv[5],"-w")==0)
-	{
+	if(strcmp(argv[5],"-w")==0){
 		input_width = atoi(argv[6]);
 	}
-	else if(strcmp(argv[5],"-h")==0)
-	{
+	else if(strcmp(argv[5],"-h")==0){
 		input_height = atoi(argv[6]);
 	}
 	
@@ -90,17 +84,14 @@ int main(int argc,char **argv)
 	resize_image=SampleImage(image,round(size_arr[0]),round(size_arr[1]),&exception);
 	DestroyImage(image);
 	
-	if (resize_image == (Image *) NULL)
-	{
+	if (resize_image == (Image *) NULL){
 		 CatchException(&exception);
 	}
-	else
-	{
+	else{
 		rendered = 1;
 	}
 	
-	if(rendered)
-	{	
+	if(rendered){	
 		strcpy(thumbnail->filename,(const char *) argv[argc-1]);
 		WriteImage(image_info,thumbnail);
 		printf("\n\n ----Done.----\n\n");
