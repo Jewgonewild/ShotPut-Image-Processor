@@ -88,7 +88,8 @@ int main(int argc,char **argv)
 		CatchException(&exception);
 	scale(width,height,input_width,input_height);
 	resize_image=SampleImage(image,round(size_arr[0]),round(size_arr[1]),&exception);
-    DestroyImage(image);
+	DestroyImage(image);
+	
 	if (resize_image == (Image *) NULL)
 	{
 		 CatchException(&exception);
