@@ -7,52 +7,27 @@
 
 short size_arr[2];
 
-char pikchur_spec(double width,double height, char *type)
+void scale(double width,double height, double input_width, double input_height)
 {
 	double scale;
-	double new_width = width;
-	double new_height = height;
-	//size_arr= (int *) malloc(16);
-	if (width > 48)
+	double new_width = 0;
+	double new_height = 0;
+	
+	if(input_width!=0)
 	{
-		if(strcmp("t",type)==0)
-		{
-			new_width = 50;
-			new_height = 50;
-		}
-		else if(strcmp("s",type)==0)
-		{
-			if (width > 170)
-			{
-				scale = width/170;
-				new_width = 170;
-				new_height = height / scale;
-			}
-			
-		}
-		else if(strcmp("m",type)==0)
-		{
-			if (width > 320)
-			{
-				scale = width/320;
-				new_width = 320;
-				new_height = height / scale;
-			}
-		}
-		else if(strcmp("l",type)==0)
-		{
-			if (width > 640)
-			{
-				scale = width/640;
-				new_width = 640;
-				new_height = height / scale;
-			}
-		}
+		scale = width/input_width;
+		new_width = input_width;
+		new_height = height / scale;
 	}
 	
+	if(input_width==0 && input_height!=0)
+	{
+		scale = height/input_height;
+		new_height = input_height;
+		new_width = width / scale;
+	}
 	size_arr[0] = new_width;
 	size_arr[1] = new_height;
-	return *type;
 }
 
 int main(int argc,char **argv)
@@ -69,45 +44,55 @@ int main(int argc,char **argv)
 	
 	int  rendered = 0;
 	int  in_width = 0;
-	int  in_height = 0;
+	int  input_width = 0;
+	int input_height =0;
 	
 	char *output_file = NULL;
 	char type;
+	char *source_image;
 	const char *result = NULL;
 	
 	long unsigned int
 	 width,
 	 height;
 	
-	/*
-    	Initialize the image info structure and read the 
-    	provided image file from the args.
-  	*/
 	InitializeMagick(*argv);
 	GetExceptionInfo(&exception);
-	//in_width = atoi(argv[2]);
-	//in_height = atoi(argv[3]);
-	output_file = argv[2];
-	image_info=CloneImageInfo((ImageInfo *) NULL);
-	(void) strcpy(image_info->filename,argv[1]);
-	//printf("Reading %s ...",argv[argc-1]);
-	image=ReadImage(image_info,&exception);
-	width = image->magick_columns; //Will need orig image length and size for scaling later.
-	height = image->magick_rows;  
-	//printf(" %lu frames\n", GetImageListLength(image));
-      	if (exception.severity != UndefinedException)
-        	CatchException(&exception);
 	
-	/*Resize the image.. for now defaulting to constrained width and height.. needs work*/
-	//printf("Reading %s ...",argv[5]);
-	type = pikchur_spec(width,height,argv[3]);
-	printf("Reading %s ...",&type);
-	resize_image=SampleImage(image,size_arr[0],size_arr[1],&exception);
+	/*Start argument collection.. iterate on this..*/
+	source_image = argv[2];
+	
+	if(strcmp(argv[3],"-w")==0)
+	{
+		input_width = atoi(argv[4]);
+	}
+	else if(strcmp(argv[3],"-h")==0)
+	{
+		input_height = atoi(argv[4]);
+	}
+	if(strcmp(argv[5],"-w")==0)
+	{
+		input_width = atoi(argv[6]);
+	}
+	else if(strcmp(argv[5],"-h")==0)
+	{
+		input_height = atoi(argv[6]);
+	}
+	
+	image_info=CloneImageInfo((ImageInfo *) NULL);
+	(void) strcpy(image_info->filename,source_image);
+	image=ReadImage(image_info,&exception);
+	width = image->magick_columns;
+	height = image->magick_rows;
+	if (exception.severity != UndefinedException)
+		CatchException(&exception);
+	scale(width,height,input_width,input_height);
+	resize_image=SampleImage(image,round(size_arr[0]),round(size_arr[1]),&exception);
     DestroyImage(image);
 	if (resize_image == (Image *) NULL)
-        {
+	{
 		 CatchException(&exception);
-        }
+	}
 	else
 	{
 		rendered = 1;
@@ -115,9 +100,9 @@ int main(int argc,char **argv)
 	
 	if(rendered)
 	{	
-		//Ghetto way .. need to get around this soon with a loop.
-		strcpy(thumbnail->filename,(const char *) argv[argc-2]);
+		strcpy(thumbnail->filename,(const char *) argv[argc-1]);
 		WriteImage(image_info,thumbnail);
+		printf("\n\n ----Done.----\n\n");
 	}
 	
 	/*Clean up objects*/
@@ -127,4 +112,3 @@ int main(int argc,char **argv)
 	return (0);
 
 }
-
