@@ -7,6 +7,10 @@
 
 //Set some globals.
 short size_arr[2];
+struct exif_data {
+   char *gps_lat;
+   char *gps_lon;
+} Exif_data;
 RectangleInfo geometry;
 
 /*
@@ -133,9 +137,8 @@ int main(int argc,char **argv)
 	height = image->magick_rows;
 	if (exception.severity != UndefinedException)
 		CatchException(&exception);
-	
+		
 	//printf("\n\n\nimage width %lu image height %lu in width %d in height %d\n\n\n",width,height,input_width,input_height);
-   
 	if(strcmp(strategy,"fit")==0){
 		scale(width,height,input_width,input_height);
 		resize_image=ScaleImage(image,size_arr[0],size_arr[1],&exception);
@@ -147,6 +150,11 @@ int main(int argc,char **argv)
 	}
 	else if(strcmp(strategy,"stretch")==0){
 		resize_image=ScaleImage(image,input_width,input_height,&exception);
+	}
+	
+	if(image->orientation == 6) //needs 90 degree right to left rotation. 
+	{
+		resize_image = RotateImage(resize_image,90,&exception);
 	}
 	DestroyImage(image);
 	
