@@ -25,10 +25,8 @@ void ExtractExif(Image *image)
 	attribute=GetImageAttribute(image,"EXIF:*");
 	values=StringToList(attribute->value);
 	
-	if (values != (char **) NULL)
-	{
-		for (x=0; values[x] != (char *) NULL; x++)
-		{
+	if (values != (char **) NULL){
+		for (x=0; values[x] != (char *) NULL; x++){
 			printf("%s\n",values[x]);
 		}
 	}
