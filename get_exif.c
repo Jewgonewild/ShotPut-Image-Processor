@@ -27,7 +27,7 @@ void ExtractExif(Image *image)
 	
 	if (values != (char **) NULL)
 	{
-        for (x=0; values[x] != (char *) NULL; x++)
+		for (x=0; values[x] != (char *) NULL; x++)
 		{
 			printf("%s\n",values[x]);
 		}
