@@ -7,10 +7,6 @@
 
 //Set some globals.
 short size_arr[2];
-struct exif_data {
-   char *gps_lat;
-   char *gps_lon;
-} Exif_data;
 RectangleInfo geometry;
 
 /*
